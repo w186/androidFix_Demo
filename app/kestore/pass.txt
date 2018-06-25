@@ -1,0 +1,3 @@
+<property name="storepass" value="cricbeijing"/>
+<property name="keypass" value="cricmobile"/>
+

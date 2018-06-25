@@ -1,0 +1,72 @@
+apply plugin: 'com.android.application'
+
+repositories {
+    mavenCentral()
+}
+
+android {
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
+    defaultConfig {
+        applicationId "com.financial.yixin"
+        minSdkVersion 17
+        targetSdkVersion 22
+        versionCode 10
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        applicationVariants.all { variant ->
+            variant.outputs.all {
+                def buildTypeName = variant.buildType.getName();
+                if(!"release".equals(buildTypeName)){
+                    outputFileName = "v${defaultConfig.versionName}_${buildTypeName}_${releaseTime()}.apk"
+                }else{
+                    outputFileName = "v${defaultConfig.versionName}_${releaseTime()}.apk"
+                }
+
+            }
+        }
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file("kestore/cric.keystore")
+            storePassword "cricbeijing"
+            keyAlias "cric"
+            keyPassword "cricmobile"
+        }
+    }
+
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    compile(name: 'alicloud-android-hotfix-3.2.3', ext: 'aar')
+    implementation 'com.android.support:appcompat-v7:27.0.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.1'
+    implementation 'com.android.support:design:27.0.1'
+    implementation 'com.lidong.pdf:android_pdf:1.0.1'
+}
+
+def releaseTime() {
+    return new Date().format("yyyy-MM-dd_HH-mm-ss")
+}
